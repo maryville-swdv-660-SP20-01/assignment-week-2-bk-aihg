@@ -73,3 +73,24 @@ class GameApiViewTests( TestCase ):
     # HINT: remember the `setUp` fixture that is in this test class, 
     #   it constructs things that might be useful
 
+
+    def test_game_view_get_solution_false(self):
+        game_id = 30   
+     
+        mock_request = self.request_factory.get(str(game_id))
+        response = game_solution(mock_request, 30)
+        
+        self.assertEquals( response.status_code, 404 )
+
+    def test_game_view_get_solution_true(self):
+        with patch.object( Game.objects, 'get' ) as mock_get:
+            mock_get.return_value = self.mock_game
+           
+            mock_request = self.request_factory.get('25')
+            response = game_solution(mock_request, 25)
+            
+            response_dict = dict(response.data)
+
+            self.assertEquals(type(response_dict), dict)
+            self.assertEquals(response.data, {'solution': 'TESTWORD'})
+        
