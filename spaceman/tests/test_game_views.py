@@ -93,4 +93,17 @@ class GameApiViewTests( TestCase ):
 
             self.assertEquals(type(response_dict), dict)
             self.assertEquals(response.data, {'solution': 'TESTWORD'})
+
+    def test_game_view_get_solution_true_batman(self):
+        with patch.object( Game.objects, 'get' ) as mock_get:
+            self.mock_game.word="BATMAN"
+            mock_get.return_value = self.mock_game
+
+            mock_request = self.request_factory.get('25')
+            response = game_solution(mock_request, 25)
+
+            response_dict = dict(response.data)
+
+            self.assertEquals(type(response_dict), dict)
+            self.assertEquals(response.data['solution'], 'BATMAN')
         
